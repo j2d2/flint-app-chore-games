@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>🏅 Leaderboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="load($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading -->
+  <ion-list *ngIf="isLoading() && !kids().length">
+    <ion-item *ngFor="let _ of [1,2,3]">
+      <ion-skeleton-text [animated]="true" style="width: 80%"></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+
+  <!-- Ranked list -->
+  <ion-list *ngIf="ranked().length">
+    <ion-item *ngFor="let entry of ranked()" lines="full" [class.top-rank]="entry.rank <= 3">
+      <div slot="start" class="rank-badge">{{ rankMedal(entry.rank) }}</div>
+      <ion-avatar slot="start">
+        <div class="avatar-emoji">{{ entry.avatar }}</div>
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ entry.name }}</h2>
+        <p>Balance: ${{ entry.balance | number:'1.2-2' }}</p>
+      </ion-label>
+      <ion-note slot="end" class="total-earned">
+        ${{ entry.totalEarned | number:'1.2-2' }}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!isLoading() && !ranked().length">
+    <ion-icon name="podium-outline" color="secondary"></ion-icon>
+    <h3>No players yet</h3>
+    <p>Add kids in the parent settings to get started.</p>
+  </div>
+</ion-content>

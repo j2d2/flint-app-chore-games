@@ -1,0 +1,34 @@
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'home',
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+  },
+  {
+    path: 'chores',
+    loadComponent: () => import('./chores/chores.page').then((m) => m.ChoresPage),
+  },
+  {
+    path: 'rewards',
+    loadComponent: () => import('./rewards/rewards.page').then((m) => m.RewardsPage),
+  },
+  {
+    path: 'leaderboard',
+    loadComponent: () => import('./leaderboard/leaderboard.page').then((m) => m.LeaderboardPage),
+  },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+  ],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

@@ -1,0 +1,4 @@
+# app ignores
+node_modules
+.angular
+www

@@ -1,0 +1,97 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>🏆 Chore Games</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="load($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Greeting -->
+  <div class="greeting-bar">
+    <h2>{{ greeting }}</h2>
+    <p>Let's knock out some chores today 💪</p>
+  </div>
+
+  <!-- Stats cards -->
+  <ion-grid *ngIf="stats() as s">
+    <ion-row>
+      <ion-col size="6">
+        <ion-card color="primary">
+          <ion-card-content class="stat-card">
+            <div class="stat-number">{{ s.todayDone }} / {{ s.todayTotal }}</div>
+            <div class="stat-label">Today's Chores</div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card color="secondary">
+          <ion-card-content class="stat-card">
+            <div class="stat-number">${{ s.weeklyEarned | number:'1.2-2' }}</div>
+            <div class="stat-label">Earned This Week</div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card color="tertiary">
+          <ion-card-content class="stat-card">
+            <div class="stat-number">🔥 {{ s.streakDays }}</div>
+            <div class="stat-label">Day Streak</div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card color="success">
+          <ion-card-content class="stat-card">
+            <div class="stat-number">{{ kids().length }}</div>
+            <div class="stat-label">Players</div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Loading skeleton -->
+  <ion-grid *ngIf="isLoading() && !stats()">
+    <ion-row>
+      <ion-col size="6" *ngFor="let _ of [1,2,3,4]">
+        <ion-card>
+          <ion-card-content>
+            <ion-skeleton-text [animated]="true" style="width: 60%; height: 32px"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 80%"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Player list -->
+  <ion-list-header *ngIf="kids().length">
+    <ion-label>Players</ion-label>
+  </ion-list-header>
+
+  <ion-list *ngIf="kids().length">
+    <ion-item *ngFor="let kid of kids()" [routerLink]="['/leaderboard']" detail>
+      <ion-avatar slot="start">
+        <div class="avatar-emoji">{{ kid.avatar }}</div>
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ kid.name }}</h2>
+        <p>Balance: ${{ kid.balance | number:'1.2-2' }}</p>
+      </ion-label>
+      <ion-note slot="end" color="success">${{ kid.totalEarned | number:'1.2-2' }}</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <!-- Quick-nav FAB -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="secondary" [routerLink]="['/chores']">
+      <ion-icon name="list-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>📋 Today's Chores</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="load($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Kid selector -->
+  <div class="kid-selector" *ngIf="kids().length">
+    <ion-segment [value]="activeKidId()" (ionChange)="selectKid($any($event.detail.value))">
+      <ion-segment-button *ngFor="let kid of kids()" [value]="kid.id">
+        <ion-label>{{ kid.avatar }} {{ kid.name }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- Loading -->
+  <ion-list *ngIf="isLoading() && !chores().length">
+    <ion-item *ngFor="let _ of [1,2,3]">
+      <ion-skeleton-text [animated]="true" style="width: 70%"></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+
+  <!-- Chore list -->
+  <ion-list *ngIf="choresWithStatus().length">
+    <ion-item-sliding *ngFor="let chore of choresWithStatus()">
+      <ion-item [class.done]="chore.isDone" lines="full">
+        <ion-icon
+          slot="start"
+          [name]="chore.isDone ? 'checkmark-circle' : (chore.icon || 'ellipse-outline')"
+          [color]="chore.isDone ? 'success' : 'medium'"
+        ></ion-icon>
+        <ion-label>
+          <h2 [class.line-through]="chore.isDone">{{ chore.title }}</h2>
+          <p *ngIf="chore.description">{{ chore.description }}</p>
+          <p>
+            <ion-badge color="secondary">${{ chore.value | number:'1.2-2' }}</ion-badge>
+            &nbsp;
+            <ion-badge color="light">{{ chore.frequency }}</ion-badge>
+          </p>
+        </ion-label>
+        <ion-button
+          slot="end"
+          fill="solid"
+          [color]="chore.isDone ? 'success' : 'primary'"
+          [disabled]="chore.isDone || markingId() === chore.id"
+          (click)="markDone(chore)"
+        >
+          <ion-spinner *ngIf="markingId() === chore.id" name="crescent"></ion-spinner>
+          <span *ngIf="markingId() !== chore.id">{{ chore.isDone ? '✓ Done' : 'Done!' }}</span>
+        </ion-button>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!isLoading() && !choresWithStatus().length">
+    <ion-icon name="checkmark-done-circle-outline" color="success"></ion-icon>
+    <h3>All done! 🎉</h3>
+    <p>No chores assigned for today.</p>
+  </div>
+</ion-content>

@@ -1,0 +1,43 @@
+.greeting-bar {
+  padding: 24px 16px 8px;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin: 4px 0 0;
+  }
+}
+
+.stat-card {
+  text-align: center;
+  padding: 16px 8px;
+
+  .stat-number {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--ion-color-contrast);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--ion-color-contrast);
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+}
+
+.avatar-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+  background: var(--ion-color-light);
+  border-radius: 50%;
+}

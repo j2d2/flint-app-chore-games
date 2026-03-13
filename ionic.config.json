@@ -1,0 +1,7 @@
+{
+  "name": "flint-app-chore-games",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
