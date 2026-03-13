@@ -18,6 +18,7 @@ export class HomePage implements OnInit {
   readonly stats = signal<ChoreStats | null>(null);
   readonly kids = signal<KidProfile[]>([]);
   readonly isLoading = signal(false);
+  readonly isOffline = signal(false);
 
   private readonly choreService = inject(ChoreService);
 
@@ -29,11 +30,18 @@ export class HomePage implements OnInit {
 
   load(event?: CustomEvent): void {
     this.isLoading.set(true);
+    this.isOffline.set(false);
     this.choreService.getStats().subscribe({
-      next: (s) => this.stats.set(s),
+      next: (s) => {
+        this.stats.set(s);
+        if (s === null) this.isOffline.set(true);
+      },
     });
     this.choreService.getKids().subscribe({
-      next: (kids) => this.kids.set(kids),
+      next: (kids) => {
+        this.kids.set(kids);
+        if (!kids.length && !this.stats()) this.isOffline.set(true);
+      },
       complete: () => {
         this.isLoading.set(false);
         (event as any)?.detail?.complete();

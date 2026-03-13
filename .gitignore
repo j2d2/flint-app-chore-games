@@ -3,3 +3,6 @@ node_modules
 .angular
 www
 .env
+backend/chore-games.db
+backend/chore-games.db-shm
+backend/chore-games.db-wal

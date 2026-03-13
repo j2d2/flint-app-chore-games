@@ -30,11 +30,12 @@ kidsRouter.get('/:id', (req: Request, res: Response) => {
 // POST /api/kids
 kidsRouter.post('/', (req: Request, res: Response) => {
   try {
-    const { name, avatar = '🧒' } = req.body as { name?: string; avatar?: string };
+    const { name, avatar = '🧒', role = 'kid' } = req.body as { name?: string; avatar?: string; role?: string };
     if (!name?.trim()) { res.status(400).json({ error: 'name is required' }); return; }
+    if (!['kid', 'adult'].includes(role)) { res.status(400).json({ error: 'role must be kid or adult' }); return; }
 
     const id = generateId();
-    db.prepare(`INSERT INTO kids (id, name, avatar) VALUES (?, ?, ?)`).run(id, name.trim(), avatar);
+    db.prepare(`INSERT INTO kids (id, name, avatar, role) VALUES (?, ?, ?, ?)`).run(id, name.trim(), avatar, role);
     const created = db.prepare(`SELECT * FROM kids WHERE id = ?`).get(id);
     res.status(201).json(created);
   } catch (err) {
@@ -48,7 +49,7 @@ kidsRouter.patch('/:id', (req: Request, res: Response) => {
     const existing = db.prepare(`SELECT id FROM kids WHERE id = ?`).get(req.params.id);
     if (!existing) { res.status(404).json({ error: 'Kid not found' }); return; }
 
-    const allowed = ['name', 'avatar'] as const;
+    const allowed = ['name', 'avatar', 'role'] as const;
     const updates: string[] = [];
     const values: unknown[] = [];
     for (const key of allowed) {

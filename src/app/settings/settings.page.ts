@@ -3,7 +3,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController, AlertController } from '@ionic/angular';
 
-import { Chore } from '../models/chore.model';
+import { Chore, ChoreFrequency } from '../models/chore.model';
 import { KidProfile, Reward } from '../models/family.model';
 import { ChoreService } from '../services/chore.service';
 
@@ -88,6 +88,7 @@ export class SettingsPage implements OnInit {
     if (!this.choreForm.title.trim()) return;
     const payload = {
       ...this.choreForm,
+      frequency: this.choreForm.frequency as ChoreFrequency,
       assigned_to: this.choreForm.assigned_to || null,
       active: 1 as unknown as number,
       created_at: '',

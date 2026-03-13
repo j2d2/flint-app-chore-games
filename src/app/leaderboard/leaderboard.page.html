@@ -27,7 +27,7 @@
         <div class="avatar-emoji">{{ entry.avatar }}</div>
       </ion-avatar>
       <ion-label>
-        <h2>{{ entry.name }}</h2>
+        <h2>{{ entry.name }} <small *ngIf="entry.role === 'adult'" style="opacity:.6;font-size:.7em">parent</small></h2>
         <p>Balance: ${{ entry.balance | number:'1.2-2' }}</p>
       </ion-label>
       <ion-note slot="end" class="total-earned">

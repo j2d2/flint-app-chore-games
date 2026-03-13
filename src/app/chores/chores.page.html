@@ -12,11 +12,14 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Kid selector -->
-  <div class="kid-selector" *ngIf="kids().length">
-    <ion-segment [value]="activeKidId()" (ionChange)="selectKid($any($event.detail.value))">
-      <ion-segment-button *ngFor="let kid of kids()" [value]="kid.id">
-        <ion-label>{{ kid.avatar }} {{ kid.name }}</ion-label>
+  <!-- "Who am I?" selector -->
+  <div class="kid-selector" *ngIf="members().length">
+    <ion-segment [value]="activePlayerId()" (ionChange)="selectPlayer($any($event.detail.value))" scrollable>
+      <ion-segment-button *ngFor="let member of members()" [value]="member.id">
+        <ion-label>
+          {{ member.avatar }} {{ member.name }}
+          <span class="role-badge" *ngIf="member.role === 'adult'">🧑</span>
+        </ion-label>
       </ion-segment-button>
     </ion-segment>
   </div>

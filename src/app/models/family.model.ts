@@ -4,6 +4,8 @@ export interface KidProfile {
   name: string;
   /** Display emoji / avatar */
   avatar: string;
+  /** 'kid' or 'adult' — adults earn the same way but are shown differently */
+  role: 'kid' | 'adult';
   /** Total lifetime earnings */
   total_earned: number;
   /** Balance not yet paid out */

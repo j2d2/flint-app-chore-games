@@ -97,6 +97,49 @@ db.exec(`
   );
 `);
 
+// Safe migration: add role column if it doesn't exist yet
+try {
+  db.exec(`ALTER TABLE kids ADD COLUMN role TEXT NOT NULL DEFAULT 'kid'`);
+} catch { /* column already exists */ }
+
+// ---------------------------------------------------------------------------
+// Seed data — runs once when the DB is empty
+// ---------------------------------------------------------------------------
+const SEED_MEMBERS = [
+  { id: generateId(), name: 'JD',       avatar: '🧔', role: 'adult' },
+  { id: generateId(), name: 'Lori-Ann', avatar: '👩', role: 'adult' },
+  { id: generateId(), name: 'Waimea',   avatar: '🌊', role: 'kid'   },
+  { id: generateId(), name: 'Jonah',    avatar: '🎮', role: 'kid'   },
+  { id: generateId(), name: 'Anaya',    avatar: '👑', role: 'kid'   },
+];
+
+const SEED_REWARDS = [
+  { id: generateId(), title: 'Ice Cream',     description: 'A scoop of your favorite!',       cost: 3.00, icon: '🍦' },
+  { id: generateId(), title: 'Screen Time',   description: '30 extra minutes of screen time',  cost: 2.00, icon: '📱' },
+  { id: generateId(), title: 'Choose Dinner', description: "You pick what's for dinner",        cost: 5.00, icon: '🍕' },
+  { id: generateId(), title: 'Stay Up Late',  description: '30 extra minutes past bedtime',     cost: 4.00, icon: '🌙' },
+];
+
+function seedInitialData(): void {
+  const memberCount = (db.prepare('SELECT COUNT(*) as c FROM kids').get() as { c: number }).c;
+  if (memberCount === 0) {
+    const insertMember = db.prepare(
+      `INSERT INTO kids (id, name, avatar, role) VALUES (@id, @name, @avatar, @role)`
+    );
+    db.transaction(() => { for (const m of SEED_MEMBERS) insertMember.run(m); })();
+  }
+
+  const rewardCount = (db.prepare('SELECT COUNT(*) as c FROM rewards').get() as { c: number }).c;
+  if (rewardCount === 0) {
+    const insertReward = db.prepare(
+      `INSERT INTO rewards (id, title, description, cost, icon) VALUES (@id, @title, @description, @cost, @icon)`
+    );
+    db.transaction(() => { for (const r of SEED_REWARDS) insertReward.run(r); })();
+  }
+}
+
+seedInitialData();
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------

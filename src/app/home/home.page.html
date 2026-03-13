@@ -18,6 +18,15 @@
     <p>Let's knock out some chores today 💪</p>
   </div>
 
+  <!-- Offline banner -->
+  <ion-card color="warning" *ngIf="isOffline()">
+    <ion-card-content style="display:flex;align-items:center;gap:8px">
+      <ion-icon name="cloud-offline-outline"></ion-icon>
+      <span>Backend offline — <strong>cd backend && npm run dev</strong> to start it.</span>
+      <ion-button size="small" fill="clear" (click)="load()">Retry</ion-button>
+    </ion-card-content>
+  </ion-card>
+
   <!-- Stats cards -->
   <ion-grid *ngIf="stats() as s">
     <ion-row>
@@ -72,7 +81,7 @@
 
   <!-- Player list -->
   <ion-list-header *ngIf="kids().length">
-    <ion-label>Players</ion-label>
+    <ion-label>Family 👨‍👩‍👧‍👦</ion-label>
   </ion-list-header>
 
   <ion-list *ngIf="kids().length">
@@ -81,7 +90,7 @@
         <div class="avatar-emoji">{{ kid.avatar }}</div>
       </ion-avatar>
       <ion-label>
-        <h2>{{ kid.name }}</h2>
+        <h2>{{ kid.name }} <small *ngIf="kid.role === 'adult'" style="opacity:.6;font-size:.7em">parent</small></h2>
         <p>Balance: ${{ kid.balance | number:'1.2-2' }}</p>
       </ion-label>
       <ion-note slot="end" color="success">${{ kid.total_earned | number:'1.2-2' }}</ion-note>

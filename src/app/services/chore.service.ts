@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { Chore, ChoreLog, ChoreStats, WeeklyEarnings } from '../models/chore.model';
 import { KidProfile, Payout, Reward, RewardRedemption } from '../models/family.model';
@@ -12,7 +13,7 @@ export class ChoreService {
   // ── Chores ────────────────────────────────────────────────────────────────
 
   getChores(): Observable<Chore[]> {
-    return this.http.get<Chore[]>('/api/chores');
+    return this.http.get<Chore[]>('/api/chores').pipe(catchError(() => of([])));
   }
 
   createChore(chore: Omit<Chore, 'id' | 'created_at'>): Observable<Chore> {
@@ -31,7 +32,7 @@ export class ChoreService {
 
   /** Returns today's logs with joined chore/kid info */
   getTodaysLogs(): Observable<ChoreLog[]> {
-    return this.http.get<ChoreLog[]>('/api/logs/today');
+    return this.http.get<ChoreLog[]>('/api/logs/today').pipe(catchError(() => of([])));
   }
 
   markDone(choreId: string, kidId: string): Observable<ChoreLog> {
@@ -40,8 +41,8 @@ export class ChoreService {
 
   // ── Stats ─────────────────────────────────────────────────────────────────
 
-  getStats(): Observable<ChoreStats> {
-    return this.http.get<ChoreStats>('/api/stats');
+  getStats(): Observable<ChoreStats | null> {
+    return this.http.get<ChoreStats>('/api/stats').pipe(catchError(() => of(null)));
   }
 
   getWeeklyEarnings(kidId: string): Observable<WeeklyEarnings> {
@@ -51,7 +52,7 @@ export class ChoreService {
   // ── Kids / Family ─────────────────────────────────────────────────────────
 
   getKids(): Observable<KidProfile[]> {
-    return this.http.get<KidProfile[]>('/api/kids');
+    return this.http.get<KidProfile[]>('/api/kids').pipe(catchError(() => of([])));
   }
 
   createKid(kid: { name: string; avatar?: string }): Observable<KidProfile> {
@@ -69,7 +70,7 @@ export class ChoreService {
   // ── Rewards ───────────────────────────────────────────────────────────────
 
   getRewards(): Observable<Reward[]> {
-    return this.http.get<Reward[]>('/api/rewards');
+    return this.http.get<Reward[]>('/api/rewards').pipe(catchError(() => of([])));
   }
 
   createReward(reward: Omit<Reward, 'id' | 'created_at'>): Observable<Reward> {
