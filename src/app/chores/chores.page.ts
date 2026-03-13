@@ -27,7 +27,7 @@ export class ChoresPage implements OnInit {
   readonly markingId = signal<string | null>(null);
 
   readonly choresWithStatus = computed<ChoreWithStatus[]>(() => {
-    const logMap = new Map(this.logs().map((l) => [l.choreId, l]));
+    const logMap = new Map(this.logs().map((l) => [l.chore_id, l]));
     return this.chores()
       .filter((c) => c.active)
       .map((c) => ({
@@ -72,7 +72,7 @@ export class ChoresPage implements OnInit {
     this.choreService.markDone(chore.id, kidId).subscribe({
       next: (log) => {
         this.logs.update((prev) => {
-          const existing = prev.findIndex((l) => l.choreId === log.choreId);
+          const existing = prev.findIndex((l) => l.chore_id === log.chore_id);
           return existing >= 0
             ? prev.map((l, i) => (i === existing ? log : l))
             : [...prev, log];

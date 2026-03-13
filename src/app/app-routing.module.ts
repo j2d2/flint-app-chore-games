@@ -19,6 +19,14 @@ const routes: Routes = [
     loadComponent: () => import('./leaderboard/leaderboard.page').then((m) => m.LeaderboardPage),
   },
   {
+    path: 'settings',
+    loadComponent: () => import('./settings/settings.page').then((m) => m.SettingsPage),
+  },
+  {
+    path: 'payout',
+    loadComponent: () => import('./payout/payout.page').then((m) => m.PayoutPage),
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',

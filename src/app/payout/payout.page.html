@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>💸 Payout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="load($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ── Balances ─────────────────────────────────────────────────────── -->
+  <h2 class="section-title">Current Balances</h2>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" *ngFor="let kid of kids()">
+        <ion-card class="balance-card"
+                  [class.zero-balance]="kid.balance === 0"
+                  (click)="selectedKidId = kid.id">
+          <ion-card-content>
+            <div class="kid-avatar">{{ kid.avatar }}</div>
+            <div class="kid-name">{{ kid.name }}</div>
+            <div class="kid-balance">${{ kid.balance.toFixed(2) }}</div>
+            <div class="kid-streak">🔥 {{ kid.streak_days }}-day streak</div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- ── Pay Out Form ─────────────────────────────────────────────────── -->
+  <ion-card>
+    <ion-card-header><ion-card-title>Record a Payout</ion-card-title></ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Who are you paying?</ion-label>
+        <ion-select [(ngModel)]="selectedKidId" placeholder="Select a kid">
+          <ion-select-option *ngFor="let kid of kids()" [value]="kid.id">
+            {{ kid.avatar }} {{ kid.name }} — ${{ kid.balance.toFixed(2) }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Note (optional)</ion-label>
+        <ion-input [(ngModel)]="payoutNote" placeholder="e.g. Cash in hand" clearInput></ion-input>
+      </ion-item>
+
+      <div *ngIf="selectedKid" class="payout-preview">
+        Paying <strong>{{ selectedKid.avatar }} {{ selectedKid.name }}</strong>
+        <span class="payout-amount">${{ selectedKid.balance.toFixed(2) }}</span>
+        and resetting their balance to $0.
+      </div>
+
+      <ion-button
+        expand="block"
+        color="success"
+        [disabled]="!selectedKidId || !selectedKid?.balance"
+        (click)="recordPayout()">
+        <ion-icon slot="start" name="cash-outline"></ion-icon>
+        Pay {{ selectedKid?.name ?? 'Kid' }}
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ── Payout History ───────────────────────────────────────────────── -->
+  <h2 class="section-title">History</h2>
+  <ion-list *ngIf="payouts().length; else noHistory">
+    <ion-item *ngFor="let p of payouts()">
+      <ion-avatar slot="start">
+        <span class="big-emoji">{{ p.kid_avatar ?? '🧒' }}</span>
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ p.kid_name }} — ${{ p.amount.toFixed(2) }}</h2>
+        <p>{{ p.paid_at | date:'mediumDate' }}{{ p.note ? ' · ' + p.note : '' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ng-template #noHistory>
+    <p class="empty-state">No payouts recorded yet.</p>
+  </ng-template>
+</ion-content>

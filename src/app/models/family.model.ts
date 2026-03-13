@@ -5,10 +5,12 @@ export interface KidProfile {
   /** Display emoji / avatar */
   avatar: string;
   /** Total lifetime earnings */
-  totalEarned: number;
+  total_earned: number;
   /** Balance not yet paid out */
   balance: number;
-  createdAt: string;
+  streak_days: number;
+  last_chore_date: string | null;
+  created_at: string;
 }
 
 /** A redeemable reward kids can save up for */
@@ -24,7 +26,19 @@ export interface Reward {
 /** A record of a reward being redeemed */
 export interface RewardRedemption {
   id: string;
-  rewardId: string;
-  kidId: string;
-  redeemedAt: string;
+  reward_id: string;
+  kid_id: string;
+  cost: number;
+  redeemed_at: string;
+}
+
+/** A parent payout record */
+export interface Payout {
+  id: string;
+  kid_id: string;
+  kid_name?: string;
+  kid_avatar?: string;
+  amount: number;
+  note?: string;
+  paid_at: string;
 }

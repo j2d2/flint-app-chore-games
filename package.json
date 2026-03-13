@@ -53,7 +53,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 18330 --host 0.0.0.0",
     "serve": "ng serve",
     "build": "ng build",
     "build:pwa": "ng build --configuration production",

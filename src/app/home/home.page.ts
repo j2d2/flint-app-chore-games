@@ -41,6 +41,10 @@ export class HomePage implements OnInit {
     });
   }
 
+  bestStreak(): number {
+    return Math.max(0, ...this.kids().map((k) => k.streak_days));
+  }
+
   private buildGreeting(): string {
     const hour = new Date().getHours();
     if (hour < 12) return '☀️ Good morning!';

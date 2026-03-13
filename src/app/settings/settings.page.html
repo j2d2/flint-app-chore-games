@@ -1,0 +1,165 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>⚙️ Settings</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="activeTab()" (ionChange)="setTab($any($event.detail.value))">
+      <ion-segment-button value="kids">
+        <ion-label>Kids</ion-label>
+        <ion-icon name="people-outline"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="chores">
+        <ion-label>Chores</ion-label>
+        <ion-icon name="list-outline"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="rewards">
+        <ion-label>Rewards</ion-label>
+        <ion-icon name="ribbon-outline"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- ── KIDS TAB ──────────────────────────────────────────────────────── -->
+  <ng-container *ngIf="activeTab() === 'kids'">
+    <ion-card>
+      <ion-card-header><ion-card-title>Add a Kid</ion-card-title></ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Name</ion-label>
+          <ion-input [(ngModel)]="kidForm.name" placeholder="e.g. Alex" clearInput></ion-input>
+        </ion-item>
+        <div class="avatar-picker">
+          <span *ngFor="let a of AVATARS"
+                class="avatar-btn"
+                [class.selected]="kidForm.avatar === a"
+                (click)="kidForm.avatar = a">{{ a }}</span>
+        </div>
+        <ion-button expand="block" (click)="addKid()" [disabled]="!kidForm.name.trim()">
+          <ion-icon slot="start" name="person-add-outline"></ion-icon>
+          Add Kid
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list>
+      <ion-item-sliding *ngFor="let kid of kids()">
+        <ion-item>
+          <ion-avatar slot="start"><span class="big-emoji">{{ kid.avatar }}</span></ion-avatar>
+          <ion-label>
+            <h2>{{ kid.name }}</h2>
+            <p>Balance: ${{ kid.balance.toFixed(2) }} · Streak: {{ kid.streak_days }}🔥</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteKid(kid)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ng-container>
+
+  <!-- ── CHORES TAB ─────────────────────────────────────────────────────── -->
+  <ng-container *ngIf="activeTab() === 'chores'">
+    <ion-card>
+      <ion-card-header><ion-card-title>Add a Chore</ion-card-title></ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Title</ion-label>
+          <ion-input [(ngModel)]="choreForm.title" placeholder="e.g. Make your bed" clearInput></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Value ($)</ion-label>
+          <ion-input type="number" [(ngModel)]="choreForm.value" min="0.01" step="0.25"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Frequency</ion-label>
+          <ion-select [(ngModel)]="choreForm.frequency">
+            <ion-select-option *ngFor="let f of FREQUENCIES" [value]="f.value">{{ f.label }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Assigned To</ion-label>
+          <ion-select [(ngModel)]="choreForm.assigned_to" placeholder="Anyone">
+            <ion-select-option value="">Anyone</ion-select-option>
+            <ion-select-option *ngFor="let kid of kids()" [value]="kid.id">{{ kid.avatar }} {{ kid.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <div class="avatar-picker">
+          <span *ngFor="let ico of CHORE_ICONS"
+                class="avatar-btn"
+                [class.selected]="choreForm.icon === ico"
+                (click)="choreForm.icon = ico">{{ ico }}</span>
+        </div>
+        <ion-button expand="block" (click)="addChore()" [disabled]="!choreForm.title.trim()">
+          <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+          Add Chore
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list>
+      <ion-item-sliding *ngFor="let chore of chores()">
+        <ion-item [class.inactive-chore]="!chore.active">
+          <ion-label>
+            <h2>{{ chore.icon }} {{ chore.title }}</h2>
+            <p>${{ chore.value.toFixed(2) }} · {{ chore.frequency }} · {{ kidName(chore.assigned_to ?? '') }}</p>
+          </ion-label>
+          <ion-toggle slot="end" [checked]="!!chore.active" (ionChange)="toggleChoreActive(chore)"></ion-toggle>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteChore(chore)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ng-container>
+
+  <!-- ── REWARDS TAB ────────────────────────────────────────────────────── -->
+  <ng-container *ngIf="activeTab() === 'rewards'">
+    <ion-card>
+      <ion-card-header><ion-card-title>Add a Reward</ion-card-title></ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Title</ion-label>
+          <ion-input [(ngModel)]="rewardForm.title" placeholder="e.g. Extra screen time" clearInput></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Cost ($)</ion-label>
+          <ion-input type="number" [(ngModel)]="rewardForm.cost" min="0.01" step="0.50"></ion-input>
+        </ion-item>
+        <div class="avatar-picker">
+          <span *ngFor="let ico of REWARD_ICONS"
+                class="avatar-btn"
+                [class.selected]="rewardForm.icon === ico"
+                (click)="rewardForm.icon = ico">{{ ico }}</span>
+        </div>
+        <ion-button expand="block" (click)="addReward()" [disabled]="!rewardForm.title.trim()">
+          <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+          Add Reward
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list>
+      <ion-item-sliding *ngFor="let reward of rewards()">
+        <ion-item>
+          <ion-label>
+            <h2>{{ reward.icon }} {{ reward.title }}</h2>
+            <p>${{ reward.cost.toFixed(2) }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteReward(reward)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ng-container>
+
+</ion-content>

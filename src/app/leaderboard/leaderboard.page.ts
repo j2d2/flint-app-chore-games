@@ -22,7 +22,7 @@ export class LeaderboardPage implements OnInit {
 
   readonly ranked = computed<LeaderboardEntry[]>(() =>
     [...this.kids()]
-      .sort((a, b) => b.totalEarned - a.totalEarned)
+      .sort((a, b) => b.total_earned - a.total_earned)
       .map((k, i) => ({ ...k, rank: i + 1 }))
   );
 

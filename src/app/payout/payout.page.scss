@@ -1,0 +1,64 @@
+:host {
+  --page-bg: #f5f3ff;
+}
+
+ion-content {
+  --background: var(--page-bg);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 16px 0 8px;
+}
+
+.balance-card {
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s;
+
+  &:active { transform: scale(0.97); }
+  &.zero-balance { opacity: 0.5; }
+
+  ion-card-content {
+    padding: 12px 8px;
+  }
+}
+
+.kid-avatar { font-size: 2.4rem; line-height: 1; }
+.kid-name   { font-weight: 700; font-size: 0.95rem; margin-top: 4px; }
+.kid-balance {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ion-color-success);
+  margin-top: 4px;
+}
+.kid-streak  { font-size: 0.75rem; color: var(--ion-color-medium); }
+
+.payout-preview {
+  margin: 12px 0;
+  padding: 10px;
+  background: rgba(16, 185, 129, 0.08);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+
+  .payout-amount {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--ion-color-success);
+    margin-left: 6px;
+  }
+}
+
+.big-emoji { font-size: 1.6rem; line-height: 1; }
+
+.empty-state {
+  text-align: center;
+  color: var(--ion-color-medium);
+  padding: 24px;
+}

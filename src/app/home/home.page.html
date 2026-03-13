@@ -24,7 +24,7 @@
       <ion-col size="6">
         <ion-card color="primary">
           <ion-card-content class="stat-card">
-            <div class="stat-number">{{ s.todayDone }} / {{ s.todayTotal }}</div>
+            <div class="stat-number">{{ s.today_done }} / {{ s.today_total }}</div>
             <div class="stat-label">Today's Chores</div>
           </ion-card-content>
         </ion-card>
@@ -32,7 +32,7 @@
       <ion-col size="6">
         <ion-card color="secondary">
           <ion-card-content class="stat-card">
-            <div class="stat-number">${{ s.weeklyEarned | number:'1.2-2' }}</div>
+            <div class="stat-number">${{ s.weekly_earned | number:'1.2-2' }}</div>
             <div class="stat-label">Earned This Week</div>
           </ion-card-content>
         </ion-card>
@@ -40,8 +40,8 @@
       <ion-col size="6">
         <ion-card color="tertiary">
           <ion-card-content class="stat-card">
-            <div class="stat-number">🔥 {{ s.streakDays }}</div>
-            <div class="stat-label">Day Streak</div>
+            <div class="stat-number">🔥 {{ bestStreak() }}</div>
+            <div class="stat-label">Best Streak</div>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -84,7 +84,7 @@
         <h2>{{ kid.name }}</h2>
         <p>Balance: ${{ kid.balance | number:'1.2-2' }}</p>
       </ion-label>
-      <ion-note slot="end" color="success">${{ kid.totalEarned | number:'1.2-2' }}</ion-note>
+      <ion-note slot="end" color="success">${{ kid.total_earned | number:'1.2-2' }}</ion-note>
     </ion-item>
   </ion-list>
 

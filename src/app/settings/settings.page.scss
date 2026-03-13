@@ -1,0 +1,46 @@
+:host {
+  --page-bg: #f5f3ff;
+}
+
+ion-content {
+  --background: var(--page-bg);
+}
+
+ion-card {
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.avatar-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.avatar-btn {
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+
+  &.selected {
+    border-color: var(--ion-color-primary);
+    background: rgba(124, 58, 237, 0.1);
+  }
+}
+
+.big-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.inactive-chore {
+  opacity: 0.45;
+}
+
+ion-item-option[color='danger'] {
+  --background: var(--ion-color-danger);
+}

@@ -16,6 +16,18 @@
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
+
+        <ion-list>
+          <ion-list-header>
+            <ion-label color="medium">Parent</ion-label>
+          </ion-list-header>
+          <ion-menu-toggle autoHide="false" *ngFor="let item of parentPages">
+            <ion-item [routerLink]="item.url" routerDirection="root" lines="full">
+              <ion-icon slot="start" [name]="item.icon"></ion-icon>
+              <ion-label>{{ item.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
       </ion-content>
     </ion-menu>
 

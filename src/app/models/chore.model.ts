@@ -8,44 +8,55 @@ export type ChoreStatus = 'pending' | 'done' | 'skipped';
 export interface Chore {
   id: string;
   title: string;
-  description?: string;
+  description?: string | null;
   /** Dollar value paid per completion */
   value: number;
   frequency: ChoreFrequency;
-  /** Icon name from ionicons */
-  icon?: string;
-  /** kid id this is assigned to; undefined = any kid */
-  assignedTo?: string;
-  active: boolean;
-  createdAt: string;
+  /** Emoji icon */
+  icon: string;
+  /** kid id this is assigned to; null = any kid */
+  assigned_to?: string | null;
+  active: number; // SQLite stores booleans as 0/1
+  created_at: string;
 }
 
 /** A single instance of a chore being completed (or not) */
 export interface ChoreLog {
   id: string;
-  choreId: string;
-  kidId: string;
+  chore_id: string;
+  kid_id: string;
   status: ChoreStatus;
-  /** ISO date string of the slot (e.g. the day for daily chores) */
-  dueDate: string;
-  completedAt?: string;
-  notes?: string;
+  due_date: string;
+  completed_at?: string | null;
+  // Joined fields from GET /api/logs/today
+  title?: string;
+  icon?: string;
+  value?: number;
+  frequency?: ChoreFrequency;
+  kid_name?: string;
+  kid_avatar?: string;
 }
 
-/** Weekly earnings summary for one kid */
+/** Weekly earnings summary for one kid (matches /api/stats/earnings/:kidId/week) */
 export interface WeeklyEarnings {
-  kidId: string;
-  weekStart: string;
-  choresCompleted: number;
-  totalEarned: number;
-  /** Pending = earned but not yet paid out */
-  pendingPayout: number;
+  kid_id: string;
+  week_start: string;
+  days: WeeklyEarningsDay[];
+  total_this_week: number;
 }
 
-/** Stats summary for the home dashboard */
+/** Stats summary for the home dashboard (matches /api/stats response) */
 export interface ChoreStats {
-  todayTotal: number;
-  todayDone: number;
-  weeklyEarned: number;
-  streakDays: number;
+  today_total: number;
+  today_done: number;
+  weekly_earned: number;
+  active_players: number;
+  kids: import('./family.model').KidProfile[];
+}
+
+/** Weekly earnings breakdown for one kid */
+export interface WeeklyEarningsDay {
+  due_date: string;
+  earned: number;
+  chores_done: number;
 }

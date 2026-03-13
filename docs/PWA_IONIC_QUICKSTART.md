@@ -28,6 +28,41 @@ Key files to examine before starting:
 6. Capacitor configured for iOS native build target (bundle ID: `com.openclaw.choregames`)  
 7. `PWA_IONIC_QUICKSTART.md` in repo root documenting the setup pattern
 
+### Port Assignment Policy ⚠️
+
+**Never use default ports (4200, 8100, 3000, 5000, 8080, etc.).** Default ports collide across apps in parallel dev and produce silent failures — the wrong server answers, or nothing answers and the error is non-obvious.
+
+Every app and backend in this workspace gets a unique port in the `183xx` range, hardcoded in three places:
+
+| Service | Port | Config location |
+|---------|------|-----------------|
+| Express backend | `18310` | `backend/src/index.ts`, `proxy.conf.json` |
+| flint-ionic-dashboard (Angular) | `18320` | `angular.json` → `serve.options.port`, `package.json` `start` script |
+| flint-app-chore-games (Angular) | `18330` | same pattern |
+| Flint MCP | `18765` | `openclaw-mcp` config |
+
+**Wire it in `angular.json`** (not just the CLI flag — the flag is forgotten next session):
+```json
+"serve": {
+  "options": {
+    "port": 18330,
+    "host": "0.0.0.0"
+  }
+}
+```
+
+**And in `package.json`** so `npm start` never defaults back to 4200:
+```json
+"start": "ng serve --port 18330 --host 0.0.0.0"
+```
+
+**Quick health check for any session start:**
+```bash
+lsof -ti :18310 && echo 'backend OK' || echo 'backend DOWN'
+lsof -ti :18330 && echo 'angular OK' || echo 'angular DOWN'
+curl -s http://localhost:18310/api/tasks | head -c 80
+```
+
 ### Backend connectivity
 - Dev: proxy `/api` → `http://127.0.0.1:18310` (same Express server as dashboard)  
 - The backend serves task queue + Flint MCP — chore games will add its own routes later  
