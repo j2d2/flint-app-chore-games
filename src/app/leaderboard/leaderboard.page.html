@@ -5,6 +5,16 @@
     </ion-buttons>
     <ion-title>🏅 Leaderboard</ion-title>
   </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment [value]="segment()" (ionChange)="onSegmentChange($any($event))">
+      <ion-segment-button value="kids">
+        <ion-label>🏆 Kids</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="haikus">
+        <ion-label>🎋 Haikus</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -12,34 +22,67 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Loading -->
-  <ion-list *ngIf="isLoading() && !kids().length">
-    <ion-item *ngFor="let _ of [1,2,3]">
-      <ion-skeleton-text [animated]="true" style="width: 80%"></ion-skeleton-text>
-    </ion-item>
-  </ion-list>
+  <!-- ── KIDS TAB ── -->
+  <ng-container *ngIf="segment() === 'kids'">
+    <!-- Loading skeletons -->
+    <ion-list *ngIf="isLoading() && !kids().length">
+      <ion-item *ngFor="let _ of [1,2,3]">
+        <ion-skeleton-text [animated]="true" style="width: 80%"></ion-skeleton-text>
+      </ion-item>
+    </ion-list>
 
-  <!-- Ranked list -->
-  <ion-list *ngIf="ranked().length">
-    <ion-item *ngFor="let entry of ranked()" lines="full" [class.top-rank]="entry.rank <= 3">
-      <div slot="start" class="rank-badge">{{ rankMedal(entry.rank) }}</div>
-      <ion-avatar slot="start">
-        <div class="avatar-emoji">{{ entry.avatar }}</div>
-      </ion-avatar>
-      <ion-label>
-        <h2>{{ entry.name }} <small *ngIf="entry.role === 'adult'" style="opacity:.6;font-size:.7em">parent</small></h2>
-        <p>Balance: ${{ entry.balance | number:'1.2-2' }}</p>
-      </ion-label>
-      <ion-note slot="end" class="total-earned">
-        ${{ entry.total_earned | number:'1.2-2' }}
-      </ion-note>
-    </ion-item>
-  </ion-list>
+    <!-- Ranked list -->
+    <ion-list *ngIf="ranked().length">
+      <ion-item *ngFor="let entry of ranked()" lines="full" [class.top-rank]="entry.rank <= 3">
+        <div slot="start" class="rank-badge">{{ rankMedal(entry.rank) }}</div>
+        <ion-avatar slot="start">
+          <div class="avatar-emoji">{{ entry.avatar }}</div>
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ entry.name }} <small *ngIf="entry.role === 'adult'" style="opacity:.6;font-size:.7em">parent</small></h2>
+          <p>Balance: ${{ entry.balance | number:'1.2-2' }}</p>
+        </ion-label>
+        <ion-note slot="end" class="total-earned">
+          ${{ entry.total_earned | number:'1.2-2' }}
+        </ion-note>
+      </ion-item>
+    </ion-list>
 
-  <!-- Empty state -->
-  <div class="empty-state" *ngIf="!isLoading() && !ranked().length">
-    <ion-icon name="podium-outline" color="secondary"></ion-icon>
-    <h3>No players yet</h3>
-    <p>Add kids in the parent settings to get started.</p>
-  </div>
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="!isLoading() && !ranked().length">
+      <ion-icon name="podium-outline" color="secondary"></ion-icon>
+      <h3>No players yet</h3>
+      <p>Add kids in the parent settings to get started.</p>
+    </div>
+  </ng-container>
+
+  <!-- ── HAIKUS TAB ── -->
+  <ng-container *ngIf="segment() === 'haikus'">
+    <!-- Loading -->
+    <div class="empty-state" *ngIf="isLoadingHaikus()">
+      <ion-spinner name="dots" color="secondary"></ion-spinner>
+      <p>Loading haikus…</p>
+    </div>
+
+    <!-- Haiku list -->
+    <div class="haiku-list" *ngIf="!isLoadingHaikus() && haikus().length">
+      <div class="haiku-card-lb" *ngFor="let h of haikus(); let i = index">
+        <div class="haiku-rank">{{ rankMedal(i + 1) }}</div>
+        <div class="haiku-body">
+          <p class="haiku-line" *ngFor="let line of haikuLines(h)">{{ line }}</p>
+        </div>
+        <div class="haiku-votes">
+          <span class="vote-count">{{ h.vote_count }}</span>
+          <ion-icon name="heart" color="secondary"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="!isLoadingHaikus() && !haikus().length">
+      <ion-icon name="leaf-outline" color="secondary"></ion-icon>
+      <h3>No haikus yet</h3>
+      <p>Complete chores to unlock voting!</p>
+    </div>
+  </ng-container>
 </ion-content>

@@ -18,6 +18,7 @@ import { rewardsRouter } from './routes/rewards';
 import { logsRouter }    from './routes/logs';
 import { statsRouter }   from './routes/stats';
 import { payoutsRouter } from './routes/payouts';
+import { haikusRouter }  from './routes/haikus';
 import { choreEvents }   from './events';
 
 const PORT = parseInt(process.env.PORT ?? '18340', 10);
@@ -62,6 +63,7 @@ app.use('/api/rewards', rewardsRouter);
 app.use('/api/logs',    logsRouter);
 app.use('/api/stats',   statsRouter);
 app.use('/api/payouts', payoutsRouter);
+app.use('/api/haikus',  haikusRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', ts: new Date().toISOString(), port: PORT });

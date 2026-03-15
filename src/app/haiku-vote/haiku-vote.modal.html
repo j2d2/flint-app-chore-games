@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>🎋 You earned a vote!</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="skip()">Skip</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding haiku-vote-content">
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading()">
+    <ion-spinner name="crescent" color="secondary"></ion-spinner>
+    <p>Finding haikus…</p>
+  </div>
+
+  <!-- Vote pair -->
+  <ng-container *ngIf="!isLoading() && pair() as p">
+    <p class="prompt">Which poem do you prefer?</p>
+
+    <div class="haiku-pair">
+
+      <!-- Card A -->
+      <div
+        class="haiku-card"
+        [class.selected]="votedId() === p.a.id"
+        [class.dimmed]="votedId() !== null && votedId() !== p.a.id"
+        (click)="vote(p.a)"
+      >
+        <div class="haiku-lines">
+          <p *ngFor="let line of lines(p.a)" class="haiku-line">{{ line }}</p>
+        </div>
+        <div class="check-icon" *ngIf="votedId() === p.a.id">✓</div>
+      </div>
+
+      <div class="versus">vs</div>
+
+      <!-- Card B -->
+      <div
+        class="haiku-card"
+        [class.selected]="votedId() === p.b.id"
+        [class.dimmed]="votedId() !== null && votedId() !== p.b.id"
+        (click)="vote(p.b)"
+      >
+        <div class="haiku-lines">
+          <p *ngFor="let line of lines(p.b)" class="haiku-line">{{ line }}</p>
+        </div>
+        <div class="check-icon" *ngIf="votedId() === p.b.id">✓</div>
+      </div>
+
+    </div>
+
+    <div class="footer-note">
+      <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+      <span>One vote per day — these haikus were written by the AI during coding sessions.</span>
+    </div>
+  </ng-container>
+
+</ion-content>

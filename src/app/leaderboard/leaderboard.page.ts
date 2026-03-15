@@ -3,7 +3,9 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 import { KidProfile } from '../models/family.model';
+import { HaikuEntry } from '../models/haiku.model';
 import { ChoreService } from '../services/chore.service';
+import { HaikuService } from '../services/haiku.service';
 
 interface LeaderboardEntry extends KidProfile {
   rank: number;
@@ -19,6 +21,10 @@ interface LeaderboardEntry extends KidProfile {
 export class LeaderboardPage implements OnInit {
   readonly kids = signal<KidProfile[]>([]);
   readonly isLoading = signal(false);
+  readonly segment = signal<'kids' | 'haikus'>('kids');
+  readonly haikus = signal<HaikuEntry[]>([]);
+  readonly isLoadingHaikus = signal(false);
+  private haikusLoaded = false;
 
   readonly ranked = computed<LeaderboardEntry[]>(() =>
     [...this.kids()]
@@ -27,6 +33,7 @@ export class LeaderboardPage implements OnInit {
   );
 
   private readonly choreService = inject(ChoreService);
+  private readonly haikuService = inject(HaikuService);
 
   ngOnInit(): void {
     this.load();
@@ -41,6 +48,29 @@ export class LeaderboardPage implements OnInit {
         (event as any)?.detail?.complete();
       },
     });
+  }
+
+  onSegmentChange(event: CustomEvent): void {
+    const val = event.detail.value as 'kids' | 'haikus';
+    this.segment.set(val);
+    if (val === 'haikus' && !this.haikusLoaded) {
+      this.loadHaikus();
+    }
+  }
+
+  loadHaikus(): void {
+    this.isLoadingHaikus.set(true);
+    this.haikuService.getLeaderboard('votes').subscribe({
+      next: (list) => {
+        this.haikus.set(list);
+        this.haikusLoaded = true;
+      },
+      complete: () => this.isLoadingHaikus.set(false),
+    });
+  }
+
+  haikuLines(entry: HaikuEntry): string[] {
+    return entry.haiku_text.split('\n').filter(Boolean);
   }
 
   rankMedal(rank: number): string {

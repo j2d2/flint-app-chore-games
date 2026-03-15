@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { ModalController, IonicModule } from '@ionic/angular';
 
 import { Chore, ChoreLog } from '../models/chore.model';
 import { KidProfile } from '../models/family.model';
 import { ChoreService } from '../services/chore.service';
+import { HaikuService } from '../services/haiku.service';
+import { HaikuVoteModalComponent } from '../haiku-vote/haiku-vote.modal';
 import { PlayerService } from '../services/player.service';
 
 interface ChoreWithStatus extends Chore {
@@ -48,6 +50,8 @@ export class ChoresPage implements OnInit {
   });
 
   private readonly choreService = inject(ChoreService);
+  private readonly modalController = inject(ModalController);
+  private readonly haikuService = inject(HaikuService);
 
   ngOnInit(): void {
     this.load();
@@ -89,9 +93,23 @@ export class ChoresPage implements OnInit {
             ? prev.map((l, i) => (i === existing ? log : l))
             : [...prev, log];
         });
+        const kid = this.members().find((m) => m.id === kidId);
+        if (kid) void this.showVoteModal(chore, kid);
       },
       complete: () => this.markingId.set(null),
       error: () => this.markingId.set(null),
     });
+  }
+
+  private async showVoteModal(chore: ChoreWithStatus, kid: KidProfile): Promise<void> {
+    if (this.haikuService.hasVotedToday(kid.id)) return;
+    const modal = await this.modalController.create({
+      component: HaikuVoteModalComponent,
+      componentProps: { kidId: kid.id, kidName: kid.name, choreId: chore.id },
+      cssClass: 'haiku-vote-modal',
+      breakpoints: [0, 0.75, 1],
+      initialBreakpoint: 0.75,
+    });
+    await modal.present();
   }
 }

@@ -114,10 +114,19 @@ const SEED_MEMBERS = [
 ];
 
 const SEED_REWARDS = [
-  { id: generateId(), title: 'Ice Cream',     description: 'A scoop of your favorite!',       cost: 3.00, icon: '🍦' },
-  { id: generateId(), title: 'Screen Time',   description: '30 extra minutes of screen time',  cost: 2.00, icon: '📱' },
-  { id: generateId(), title: 'Choose Dinner', description: "You pick what's for dinner",        cost: 5.00, icon: '🍕' },
-  { id: generateId(), title: 'Stay Up Late',  description: '30 extra minutes past bedtime',     cost: 4.00, icon: '🌙' },
+  { id: generateId(), title: 'Ice Cream',             description: 'A scoop of your favorite!',                             cost: 3.00, icon: '🍦' },
+  { id: generateId(), title: 'Screen Time',           description: '30 extra minutes of screen time',                       cost: 2.00, icon: '📱' },
+  { id: generateId(), title: 'Choose Dinner',         description: "You pick what's for dinner",                             cost: 5.00, icon: '🍕' },
+  { id: generateId(), title: 'Stay Up Late',          description: '30 extra minutes past bedtime',                         cost: 4.00, icon: '🌙' },
+  { id: generateId(), title: 'Dessert for Breakfast', description: 'Pancakes with chocolate chips, donuts, or whatever you pick!', cost: 6.00, icon: '🍩' },
+];
+
+const SEED_CHORES = [
+  { id: generateId(), title: 'Clean dinner dishes', description: 'Wash, dry, and put away',                    value: 2.00, frequency: 'daily', icon: '🍽️', assigned_to: null },
+  { id: generateId(), title: 'Make your bed',       description: 'Blankets straight, pillows fluffed',          value: 0.50, frequency: 'daily', icon: '🛏️', assigned_to: null },
+  { id: generateId(), title: 'Sweep the floor',     description: 'Kitchen and living room',                     value: 1.00, frequency: 'daily', icon: '🧹', assigned_to: null },
+  { id: generateId(), title: 'Take out the trash',  description: 'All bins emptied and bag replaced',           value: 1.00, frequency: 'daily', icon: '🗑️', assigned_to: null },
+  { id: generateId(), title: 'Put away laundry',    description: 'Fold and put your clean clothes away',        value: 0.75, frequency: 'daily', icon: '🧺', assigned_to: null },
 ];
 
 function seedInitialData(): void {
@@ -135,6 +144,14 @@ function seedInitialData(): void {
       `INSERT INTO rewards (id, title, description, cost, icon) VALUES (@id, @title, @description, @cost, @icon)`
     );
     db.transaction(() => { for (const r of SEED_REWARDS) insertReward.run(r); })();
+  }
+
+  const choreCount = (db.prepare('SELECT COUNT(*) as c FROM chores').get() as { c: number }).c;
+  if (choreCount === 0) {
+    const insertChore = db.prepare(
+      `INSERT INTO chores (id, title, description, value, frequency, icon, assigned_to) VALUES (@id, @title, @description, @value, @frequency, @icon, @assigned_to)`
+    );
+    db.transaction(() => { for (const c of SEED_CHORES) insertChore.run(c); })();
   }
 }
 
