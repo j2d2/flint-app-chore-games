@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } from '@angular/core';
+import {
+  IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonSpinner, IonTitle, IonToolbar,
+  ModalController, ToastController,
+} from '@ionic/angular/standalone';
 
 import { HaikuEntry, HaikuPair } from '../models/haiku.model';
 import { HaikuService } from '../services/haiku.service';
@@ -10,12 +13,16 @@ import { HaikuService } from '../services/haiku.service';
   templateUrl: './haiku-vote.modal.html',
   styleUrls: ['./haiku-vote.modal.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonSpinner, IonTitle, IonToolbar,
+  ],
 })
 export class HaikuVoteModalComponent implements OnInit {
-  @Input() kidId!: string;
-  @Input() kidName!: string;
-  @Input() choreId?: string;
+  readonly kidId = input.required<string>();
+  readonly kidName = input.required<string>();
+  readonly choreId = input<string>();
 
   readonly pair = signal<HaikuPair | null>(null);
   readonly isLoading = signal(true);
@@ -27,11 +34,11 @@ export class HaikuVoteModalComponent implements OnInit {
 
   ngOnInit(): void {
     // Shouldn't reach here if already voted, but guard anyway
-    if (this.haikuService.hasVotedToday(this.kidId)) {
+    if (this.haikuService.hasVotedToday(this.kidId())) {
       void this.dismiss();
       return;
     }
-    this.haikuService.getPair(this.kidName).subscribe({
+    this.haikuService.getPair(this.kidName()).subscribe({
       next: (p) => {
         this.pair.set(p);
         this.isLoading.set(false);
@@ -49,8 +56,8 @@ export class HaikuVoteModalComponent implements OnInit {
     if (this.votedId()) return;
     this.votedId.set(haiku.id);
 
-    this.haikuService.vote(haiku.id, this.kidName, this.choreId).subscribe();
-    this.haikuService.markVotedToday(this.kidId);
+    this.haikuService.vote(haiku.id, this.kidName(), this.choreId()).subscribe();
+    this.haikuService.markVotedToday(this.kidId());
 
     // Brief celebration before dismissing
     setTimeout(() => {

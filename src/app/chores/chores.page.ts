@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { ModalController, IonicModule } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed } from '@angular/core';
+import {
+  IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem,
+  IonItemSliding, IonLabel, IonList, IonMenuButton, IonRefresher, IonRefresherContent,
+  IonSegment, IonSegmentButton, IonSkeletonText, IonSpinner, IonTitle, IonToolbar,
+  ModalController,
+} from '@ionic/angular/standalone';
 
 import { Chore, ChoreLog } from '../models/chore.model';
 import { KidProfile } from '../models/family.model';
@@ -19,7 +24,13 @@ interface ChoreWithStatus extends Chore {
   templateUrl: './chores.page.html',
   styleUrls: ['./chores.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem,
+    IonItemSliding, IonLabel, IonList, IonMenuButton, IonRefresher, IonRefresherContent,
+    IonSegment, IonSegmentButton, IonSkeletonText, IonSpinner, IonTitle, IonToolbar,
+  ],
 })
 export class ChoresPage implements OnInit {
   readonly chores = signal<Chore[]>([]);

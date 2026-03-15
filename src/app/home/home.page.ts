@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCol, IonContent,
+  IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList,
+  IonListHeader, IonMenuButton, IonNote, IonRefresher, IonRefresherContent, IonRow,
+  IonSkeletonText, IonTitle, IonToolbar,
+} from '@ionic/angular/standalone';
 
 import { ChoreStats } from '../models/chore.model';
 import { KidProfile } from '../models/family.model';
@@ -12,7 +17,14 @@ import { ChoreService } from '../services/chore.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule, RouterModule,
+    IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCol, IonContent,
+    IonFab, IonFabButton, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList,
+    IonListHeader, IonMenuButton, IonNote, IonRefresher, IonRefresherContent, IonRow,
+    IonSkeletonText, IonTitle, IonToolbar,
+  ],
 })
 export class HomePage implements OnInit {
   readonly stats = signal<ChoreStats | null>(null);

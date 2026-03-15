@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import {
+  IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol,
+  IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList,
+  IonRefresher, IonRefresherContent, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar,
+  ToastController,
+} from '@ionic/angular/standalone';
 
 import { KidProfile, Payout } from '../models/family.model';
 import { ChoreService } from '../services/chore.service';
@@ -11,7 +16,13 @@ import { ChoreService } from '../services/chore.service';
   templateUrl: './payout.page.html',
   styleUrls: ['./payout.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule, FormsModule,
+    IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol,
+    IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList,
+    IonRefresher, IonRefresherContent, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar,
+  ],
 })
 export class PayoutPage implements OnInit {
   readonly kids     = signal<KidProfile[]>([]);

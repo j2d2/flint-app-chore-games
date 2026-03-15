@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController, AlertController } from '@ionic/angular';
+import {
+  IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+  IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemOption, IonItemOptions,
+  IonItemSliding, IonLabel, IonList, IonSegment, IonSegmentButton, IonSelect,
+  IonSelectOption, IonTitle, IonToggle, IonToolbar,
+  ToastController, AlertController,
+} from '@ionic/angular/standalone';
 
 import { Chore, ChoreFrequency } from '../models/chore.model';
 import { KidProfile, Reward } from '../models/family.model';
@@ -14,7 +20,14 @@ type SettingsTab = 'kids' | 'chores' | 'rewards';
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule, FormsModule,
+    IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+    IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemOption, IonItemOptions,
+    IonItemSliding, IonLabel, IonList, IonSegment, IonSegmentButton, IonSelect,
+    IonSelectOption, IonTitle, IonToggle, IonToolbar,
+  ],
 })
 export class SettingsPage implements OnInit {
   readonly activeTab = signal<SettingsTab>('kids');

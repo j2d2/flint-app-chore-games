@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import {
+  IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader,
+  IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon,
+  IonItem, IonLabel, IonList, IonMenuButton, IonRefresher, IonRefresherContent, IonRow,
+  IonSegment, IonSegmentButton, IonSkeletonText, IonSpinner, IonTitle, IonToolbar,
+  ToastController,
+} from '@ionic/angular/standalone';
 
 import { Reward } from '../models/family.model';
 import { KidProfile } from '../models/family.model';
@@ -11,7 +17,14 @@ import { ChoreService } from '../services/chore.service';
   templateUrl: './rewards.page.html',
   styleUrls: ['./rewards.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader,
+    IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon,
+    IonItem, IonLabel, IonList, IonMenuButton, IonRefresher, IonRefresherContent, IonRow,
+    IonSegment, IonSegmentButton, IonSkeletonText, IonSpinner, IonTitle, IonToolbar,
+  ],
 })
 export class RewardsPage implements OnInit {
   readonly rewards = signal<Reward[]>([]);

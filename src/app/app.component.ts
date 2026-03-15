@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  IonApp, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader,
+  IonMenu, IonMenuToggle, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar,
+} from '@ionic/angular/standalone';
+import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   homeOutline,
@@ -13,7 +18,13 @@ import {
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  standalone: false,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    RouterLink,
+    IonApp, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader,
+    IonMenu, IonMenuToggle, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar,
+  ],
 })
 export class AppComponent {
   readonly appPages = [

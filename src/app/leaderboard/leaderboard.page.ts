@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed } from '@angular/core';
+import {
+  IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList,
+  IonMenuButton, IonNote, IonRefresher, IonRefresherContent, IonSegment, IonSegmentButton,
+  IonSkeletonText, IonSpinner, IonTitle, IonToolbar,
+} from '@ionic/angular/standalone';
 
 import { KidProfile } from '../models/family.model';
 import { HaikuEntry } from '../models/haiku.model';
@@ -16,7 +20,13 @@ interface LeaderboardEntry extends KidProfile {
   templateUrl: './leaderboard.page.html',
   styleUrls: ['./leaderboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    IonAvatar, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList,
+    IonMenuButton, IonNote, IonRefresher, IonRefresherContent, IonSegment, IonSegmentButton,
+    IonSkeletonText, IonSpinner, IonTitle, IonToolbar,
+  ],
 })
 export class LeaderboardPage implements OnInit {
   readonly kids = signal<KidProfile[]>([]);
