@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Chore Games</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="pin-content">
+
+  @if (!selectedKid()) {
+
+    <!-- ── Kid selector ── -->
+    <div class="selector-wrapper">
+      <h2 class="selector-heading">Who are you?</h2>
+
+      @if (loadingKids()) {
+        <div class="center">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      } @else {
+        <div class="kid-grid">
+          @for (kid of kids(); track kid.id) {
+            <button class="kid-card" (click)="selectKid(kid)">
+              <span class="kid-avatar">{{ kid.avatar }}</span>
+              <span class="kid-name">{{ kid.name }}</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+  } @else {
+
+    <!-- ── PIN entry ── -->
+    <div class="pin-wrapper">
+      <button class="back-btn" (click)="back()">← Back</button>
+
+      <div class="pin-profile">
+        <span class="pin-profile__avatar">{{ selectedKid()!.avatar }}</span>
+        <span class="pin-profile__name">{{ selectedKid()!.name }}</span>
+      </div>
+
+      <p class="pin-prompt">Enter your 6-digit birthday PIN</p>
+      <p class="pin-dots">{{ pinDisplay() }}</p>
+
+      @if (error()) {
+        <ion-text color="danger">
+          <p class="pin-error">{{ error() }}</p>
+        </ion-text>
+      }
+
+      @if (loading()) {
+        <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+      } @else {
+        <div class="numpad">
+          @for (key of NUMPAD; track $index) {
+            <button
+              class="numpad-key"
+              [class.numpad-key--empty]="key === ''"
+              [disabled]="key === ''"
+              (click)="onKey(key)"
+            >
+              {{ key }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+  }
+
+</ion-content>

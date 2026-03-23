@@ -1,0 +1,143 @@
+.pin-content {
+  --background: var(--ion-color-light);
+}
+
+/* ── Kid selector ── */
+.selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px;
+}
+
+.selector-heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: var(--ion-color-dark);
+}
+
+.kid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.kid-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 12px;
+  border-radius: 16px;
+  border: 2px solid var(--ion-color-primary-tint);
+  background: white;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+
+  &:hover, &:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+  &:active { transform: scale(0.97); }
+}
+
+.kid-avatar {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.kid-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+}
+
+/* ── PIN entry ── */
+.pin-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 24px;
+}
+
+.back-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--ion-color-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 24px;
+}
+
+.pin-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+
+  &__avatar {
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  &__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+  }
+}
+
+.pin-prompt {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+}
+
+.pin-dots {
+  font-size: 1.5rem;
+  letter-spacing: 0.4em;
+  margin-bottom: 8px;
+  font-family: monospace;
+  color: var(--ion-color-dark);
+}
+
+.pin-error {
+  font-size: 0.875rem;
+  margin: 8px 0 16px;
+}
+
+/* ── Numpad ── */
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 88px);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.numpad-key {
+  height: 72px;
+  border-radius: 14px;
+  border: 2px solid var(--ion-color-primary-tint);
+  background: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  cursor: pointer;
+  transition: background 0.1s, transform 0.1s;
+
+  &:hover:not(:disabled) { background: var(--ion-color-primary-tint); }
+  &:active:not(:disabled) { transform: scale(0.93); }
+  &--empty, &:disabled { visibility: hidden; }
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}

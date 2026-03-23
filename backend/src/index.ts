@@ -12,6 +12,8 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server as SocketIoServer } from 'socket.io';
 
+import { authRouter }    from './routes/auth';
+import { requireAuth }   from './middleware/auth.middleware';
 import { kidsRouter }    from './routes/kids';
 import { choresRouter }  from './routes/chores';
 import { rewardsRouter } from './routes/rewards';
@@ -57,17 +59,26 @@ app.use(express.json({ limit: '64kb' }));
 // ---------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------
-app.use('/api/kids',    kidsRouter);
+// Auth routes — unprotected
+app.use('/api/auth', authRouter);
+
+// Kids list readable without auth (needed for PIN selector UI)
+app.use('/api/kids', kidsRouter);
+
+// Health check unprotected
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', ts: new Date().toISOString(), port: PORT });
+});
+
+// All remaining /api/* routes require a valid JWT
+app.use('/api', requireAuth);
+
 app.use('/api/chores',  choresRouter);
 app.use('/api/rewards', rewardsRouter);
 app.use('/api/logs',    logsRouter);
 app.use('/api/stats',   statsRouter);
 app.use('/api/payouts', payoutsRouter);
 app.use('/api/haikus',  haikusRouter);
-
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', ts: new Date().toISOString(), port: PORT });
-});
 
 // ---------------------------------------------------------------------------
 // Start

@@ -2,6 +2,7 @@
  * routes/kids.ts — CRUD for kid profiles.
  */
 import { Router, Request, Response } from 'express';
+import bcrypt from 'bcrypt';
 import { db, generateId } from '../db';
 
 export const kidsRouter = Router();
@@ -71,6 +72,26 @@ kidsRouter.delete('/:id', (req: Request, res: Response) => {
     const result = db.prepare(`DELETE FROM kids WHERE id = ?`).run(req.params.id);
     if (result.changes === 0) { res.status(404).json({ error: 'Kid not found' }); return; }
     res.json({ deleted: true });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
+});
+
+// POST /api/kids/:id/set-pin — set or update a kid's birthday PIN (hashed)
+kidsRouter.post('/:id/set-pin', async (req: Request, res: Response) => {
+  try {
+    const existing = db.prepare(`SELECT id FROM kids WHERE id = ?`).get(req.params.id);
+    if (!existing) { res.status(404).json({ error: 'Kid not found' }); return; }
+
+    const { pin } = req.body as { pin?: string };
+    if (!pin || !/^\d{6}$/.test(pin)) {
+      res.status(400).json({ error: 'PIN must be exactly 6 digits' });
+      return;
+    }
+
+    const hashed = await bcrypt.hash(pin, 12);
+    db.prepare(`UPDATE kids SET pin = ? WHERE id = ?`).run(hashed, req.params.id);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });
   }

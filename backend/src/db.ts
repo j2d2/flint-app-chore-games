@@ -102,6 +102,11 @@ try {
   db.exec(`ALTER TABLE kids ADD COLUMN role TEXT NOT NULL DEFAULT 'kid'`);
 } catch { /* column already exists */ }
 
+// Safe migration: add pin column for birthday-based PIN auth
+try {
+  db.exec(`ALTER TABLE kids ADD COLUMN pin TEXT`);
+} catch { /* column already exists */ }
+
 // ---------------------------------------------------------------------------
 // Seed data — runs once when the DB is empty
 // ---------------------------------------------------------------------------
