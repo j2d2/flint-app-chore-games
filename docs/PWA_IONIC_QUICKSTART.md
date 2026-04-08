@@ -6,10 +6,10 @@ clean clone of the `flint-ionic-dashboard` frontend structure, connected to the 
 Express backend service at `http://127.0.0.1:18310`.
 
 ### App repo
-`/Users/jd/Documents/ai-ml/openclaw-instance/apps/flint-app-chore-games`
+`/Users/jd/Documents/ai-ml/flint-instance/apps/flint-app-chore-games`
 
 ### Reference app (clone structure from)
-`/Users/jd/Documents/ai-ml/openclaw-instance/apps/flint-ionic-dashboard`
+`/Users/jd/Documents/ai-ml/flint-instance/apps/flint-ionic-dashboard`
 
 Key files to examine before starting:
 - `angular.json`, `ionic.config.json`, `capacitor.config.ts` — project config
@@ -25,7 +25,7 @@ Key files to examine before starting:
 3. Shared models: copy `src/app/models/` (agent-task.model.ts, channel.model.ts)  
 4. Shared services: copy `src/app/services/` (task.service.ts, socket.service.ts, approval.service.ts)  
 5. Home page: game-themed dashboard (kids chore tracking) — placeholder is fine for now  
-6. Capacitor configured for iOS native build target (bundle ID: `com.openclaw.choregames`)  
+6. Capacitor configured for iOS native build target (bundle ID: `com.flint.choregames`)  
 7. `PWA_IONIC_QUICKSTART.md` in repo root documenting the setup pattern
 
 ### Port Assignment Policy ⚠️
@@ -39,7 +39,7 @@ Every app and backend in this workspace gets a unique port in the `183xx` range,
 | Express backend | `18310` | `backend/src/index.ts`, `proxy.conf.json` |
 | flint-ionic-dashboard (Angular) | `18320` | `angular.json` → `serve.options.port`, `package.json` `start` script |
 | flint-app-chore-games (Angular) | `18330` | same pattern |
-| Flint MCP | `18765` | `openclaw-mcp` config |
+| Flint MCP | `18765` | `flint-mcp` config |
 
 **Wire it in `angular.json`** (not just the CLI flag — the flag is forgotten next session):
 ```json

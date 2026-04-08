@@ -24,7 +24,7 @@ Backend API: shared Express server at `:18310` (same as `flint-ionic-dashboard`)
 ## Backend API (shared with dashboard)
 
 All `/api/chores/*` routes need to be added to the Express server in  
-`/Users/jd/Documents/ai-ml/openclaw-instance/apps/flint-ionic-dashboard/backend/`.
+`/Users/jd/Documents/ai-ml/flint-instance/apps/flint-ionic-dashboard/backend/`.
 
 | Method | Route | Purpose |
 |--------|-------|---------|
@@ -52,7 +52,7 @@ All `/api/chores/*` routes need to be added to the Express server in
 
 ## Capacitor (iOS)
 
-Bundle ID: `com.openclaw.choregames`
+Bundle ID: `com.flint.choregames`
 
 ```bash
 npm run build:pwa
