@@ -1,8 +1,12 @@
 {
   "servers": {
-    "angular-cli": {
-      "command": "node_modules/.bin/ng",
-      "args": ["mcp"]
+    "flint": {
+      "type": "http",
+      "url": "http://127.0.0.1:18765/mcp"
+    },
+    "flint-repo": {
+      "type": "http",
+      "url": "http://127.0.0.1:18767/mcp"
     },
     "flint-qa": {
       "url": "http://127.0.0.1:18768/mcp"
